@@ -24,6 +24,8 @@ day = DateTime.now
 if month == 0 && year == 0
   month = day.month
   year = day.year
+elsif year == 0
+  year = day.year
 end
 
 #月の始めを変数に代入
