@@ -45,67 +45,11 @@ frames = shots.each_slice(2).to_a
 
 point = 0
 frames.each_with_index do |_frame, index|
-  # binding.break
-  if index < 9
+  if index <= 9
     point += strike(frames, index)
     point += spare(frames, index)
     point += open(frames, index)
   end
-
-  if index == 9
-    point += strike(frames, index)
-
-=begin
-    if frames[index][0] == 10
-      if frames[index + 1][0] == 10
-        point += (20 + frames[index + 2][0])
-      else
-        point += (10 + frames[index + 1].sum)
-      end
-    end
-=end
-  point += spare(frames, index)
-=begin
-    if frames[index].sum == 10 && frames[index][0] != 10
-      point += (10 + frames[index + 1][0])
-    end
-=end
-  point += open(frames, index)
-  end
 end
-
-=begin
-frames.each_with_index do |_frame, index|
-  if index < 9
-    if frames[index][0] == 10
-      if frames[index + 1][0] == 10
-        point += (20 + frames[index + 2][0])
-      else
-        point += (10 + frames[index + 1].sum)
-      end
-    elsif frames[index].sum == 10
-      point += (10 + frames[index + 1][0])
-    else
-      point += frames[index].sum
-    end
-  end
-
-  if index == 9
-    if frames[index][0] == 10
-      if frames[index + 1][0] == 10
-        point += (20 + frames[index + 2][0])
-      else
-        point += (10 + frames[index + 1].sum)
-      end
-      break
-    elsif frames[index].sum == 10
-      point += (10 + frames[index + 1][0])
-      break
-    else
-      point += frames[index].sum
-    end
-  end
-end
-=end
 
 puts point
