@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
-require 'debug'
 
-def strike(all_frame_st, st_frame) 
+# frozen_string_literal: true
+
+def strike(all_frame_st, st_frame)
   if all_frame_st[st_frame][0] == 10
     if all_frame_st[st_frame + 1][0] == 10
       20 + all_frame_st[st_frame + 2][0]
@@ -21,7 +22,7 @@ def spare(all_frame_sp, sp_frame)
   end
 end
 
-def open(all_frame_op, op_frame)
+def open_frame(all_frame_op, op_frame)
   if all_frame_op[op_frame].sum != 10
     all_frame_op[op_frame].sum
   else
@@ -45,11 +46,11 @@ frames = shots.each_slice(2).to_a
 
 point = 0
 frames.each_with_index do |_frame, index|
-  if index <= 9
-    point += strike(frames, index)
-    point += spare(frames, index)
-    point += open(frames, index)
-  end
+  next if index > 9
+
+  point += strike(frames, index)
+  point += spare(frames, index)
+  point += open_frame(frames, index)
 end
 
 puts point
