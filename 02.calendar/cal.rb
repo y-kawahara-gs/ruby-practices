@@ -24,8 +24,9 @@ end
 date_f = Date.new(year, month, 1)
 date_l = Date.new(year, month, -1)
 
-puts "#{month}月 #{year}".center(21)
-puts "日 月 火 水 木 金 土"
+
+puts "#{date_f.strftime('%B')} #{year}".center(21)
+puts "Su Ma Tu We Th Fr Sa"
 
 wday_f = date_f.wday
 blank = "   "*wday_f
