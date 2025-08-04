@@ -26,8 +26,7 @@ puts "#{date_fast.strftime('%B')} #{year}".center(21)
 puts "Su Ma Tu We Th Fr Sa"
 
 wday_f = date_fast.wday
-blank = "   "*wday_f
-print blank
+print "   "*wday_f
 
 (date_fast..date_last).each do |x|
   if x.strftime('%a') == "Sat" && x.strftime('%-d').to_i < 10
