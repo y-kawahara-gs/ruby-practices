@@ -3,15 +3,12 @@
 require 'optparse'
 require 'date'
 
-month = 0
-year = 0
-
 opt = OptionParser.new
+month_year_opt = opt.getopts(ARGV, "m:", "y:")
 
-opt.on('-m int'){|v| month = v.to_i}
-opt.on('-y int'){|v| year = v.to_i}
+month = month_year_opt["m"].to_i
+year = month_year_opt["y"].to_i
 
-opt.parse!(ARGV)
 today = Time.now
 
 if month == 0 && year == 0
