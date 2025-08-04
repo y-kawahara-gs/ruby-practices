@@ -28,15 +28,15 @@ puts "Su Ma Tu We Th Fr Sa"
 wday_f = date_fast.wday
 print "   "*wday_f
 
-(date_fast..date_last).each do |x|
-  if x.strftime('%a') == "Sat" && x.strftime('%-d').to_i < 10
-    print " #{x.strftime('%-d')}\n"
-  elsif x.strftime('%a') == 'Sat'
-    print "#{x.strftime('%-d')}\n"
-  elsif x.strftime('%-d').to_i < 10
-    print " #{x.strftime('%-d')} "
+(date_fast..date_last).each do |a_day|
+  if a_day.strftime('%a') == "Sat" && a_day.strftime('%-d').to_i < 10
+    print " #{a_day.strftime('%-d')}\n"
+  elsif a_day.strftime('%a') == 'Sat'
+    print "#{a_day.strftime('%-d')}\n"
+  elsif a_day.strftime('%-d').to_i < 10
+    print " #{a_day.strftime('%-d')} "
   else
-    print "#{x.strftime('%-d')} "
+    print "#{a_day.strftime('%-d')} "
   end
 end
 
