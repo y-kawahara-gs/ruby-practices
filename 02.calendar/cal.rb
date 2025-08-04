@@ -12,13 +12,13 @@ opt.on('-m int'){|v| month = v.to_i}
 opt.on('-y int'){|v| year = v.to_i}
 
 opt.parse!(ARGV)
-day = DateTime.now
+today = Time.now
 
 if month == 0 && year == 0
-  month = day.month
-  year = day.year
+  month = today.month
+  year = today.year
 elsif year == 0
-  year = day.year
+  year = today.year
 end
 
 date_f = Date.new(year, month, 1)
