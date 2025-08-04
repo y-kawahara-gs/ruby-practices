@@ -18,18 +18,18 @@ elsif year == 0
   year = today.year
 end
 
-date_f = Date.new(year, month, 1)
-date_l = Date.new(year, month, -1)
+date_fast = Date.new(year, month, 1)
+date_last = Date.new(year, month, -1)
 
 
-puts "#{date_f.strftime('%B')} #{year}".center(21)
+puts "#{date_fast.strftime('%B')} #{year}".center(21)
 puts "Su Ma Tu We Th Fr Sa"
 
-wday_f = date_f.wday
+wday_f = date_fast.wday
 blank = "   "*wday_f
 print blank
 
-(date_f..date_l).each do |x|
+(date_fast..date_last).each do |x|
   if x.strftime('%a') == "Sat" && x.strftime('%-d').to_i < 10
     print " #{x.strftime('%-d')}\n"
   elsif x.strftime('%a') == 'Sat'
