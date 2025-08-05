@@ -21,7 +21,6 @@ end
 date_fast = Date.new(year, month, 1)
 date_last = Date.new(year, month, -1)
 
-
 puts "#{date_fast.strftime('%B')} #{year}".center(21)
 puts "Su Ma Tu We Th Fr Sa"
 
@@ -29,14 +28,13 @@ wday_f = date_fast.wday
 print "   "*wday_f
 
 (date_fast..date_last).each do |a_day|
-  if a_day.strftime('%a') == "Sat" && a_day.strftime('%-d').to_i < 10
-    print " #{a_day.strftime('%-d')}\n"
-  elsif a_day.strftime('%a') == 'Sat'
-    print "#{a_day.strftime('%-d')}\n"
-  elsif a_day.strftime('%-d').to_i < 10
+  if a_day.day < 10
     print " #{a_day.strftime('%-d')} "
   else
     print "#{a_day.strftime('%-d')} "
+  end
+  if a_day.saturday? == true
+    print "\n"
   end
 end
 
