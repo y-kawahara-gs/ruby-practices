@@ -28,11 +28,7 @@ wday_f = date_first.wday
 print "   "*wday_f
 
 (date_first..date_last).each do |date|
-  if date.day < 10
-    print " #{date.day} "
-  else
-    print "#{date.day} "
-  end
+  print "#{date.day}".rjust(3)
   if date.saturday?
     print "\n"
   end
