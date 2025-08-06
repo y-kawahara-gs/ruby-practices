@@ -33,7 +33,7 @@ print "   "*wday_f
   else
     print "#{date.day} "
   end
-  if date.saturday? == true
+  if date.saturday?
     print "\n"
   end
 end
