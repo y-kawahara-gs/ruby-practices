@@ -18,16 +18,16 @@ elsif year == 0
   year = today.year
 end
 
-date_fast = Date.new(year, month, 1)
+date_first = Date.new(year, month, 1)
 date_last = Date.new(year, month, -1)
 
-puts "#{date_fast.strftime('%B')} #{year}".center(21)
+puts "#{date_first.strftime('%B')} #{year}".center(21)
 puts "Su Ma Tu We Th Fr Sa"
 
-wday_f = date_fast.wday
+wday_f = date_first.wday
 print "   "*wday_f
 
-(date_fast..date_last).each do |a_day|
+(date_first..date_last).each do |a_day|
   if a_day.day < 10
     print " #{a_day.strftime('%-d')} "
   else
