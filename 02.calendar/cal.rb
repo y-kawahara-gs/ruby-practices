@@ -27,13 +27,13 @@ puts "Su Ma Tu We Th Fr Sa"
 wday_f = date_first.wday
 print "   "*wday_f
 
-(date_first..date_last).each do |a_day|
-  if a_day.day < 10
-    print " #{a_day.strftime('%-d')} "
+(date_first..date_last).each do |date|
+  if date.day < 10
+    print " #{date.day} "
   else
-    print "#{a_day.strftime('%-d')} "
+    print "#{date.day} "
   end
-  if a_day.saturday? == true
+  if date.saturday? == true
     print "\n"
   end
 end
