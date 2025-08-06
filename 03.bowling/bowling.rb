@@ -1,15 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-
-def open_frame(op_frame, op)
-  if op_frame[op].sum != 10
-    op_frame[op].sum
-  else
-    0
-  end
-end
-
 score = ARGV[0]
 scores = score.split(',')
 shots = scores.flat_map { |s| s == 'X' ? [10, 0] : s.to_i }
