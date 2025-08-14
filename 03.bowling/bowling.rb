@@ -8,17 +8,20 @@ shots = scores.flat_map { |s| s == 'X' ? [10, 0] : s.to_i }
 frames = shots.each_slice(2).to_a
 
 point = frames.take(10).each_with_index.sum do |frame, index|
-  if frames[index].sum < 10
-    frames[index].sum
-  elsif frames[index][0] != 10
-    frames[index].sum + frames[index + 1][0]
-  else
-    if frames[index + 1][0] == 10
-      frames[index].sum + frames[index + 1].sum + frames[index + 2][0]
-    else
-      frames[index].sum +frames[index + 1].sum
-    end
-  end
+  base_score = frames[index].sum
+  bonus = if frames[index].sum < 10
+            0
+          elsif frames[index][0] != 10
+            frames[index + 1][0]
+          else
+            next_score = frames[index + 1].sum
+            if frames[index + 1][0] == 10
+              next_score + frames[index + 2][0]
+            else
+              next_score
+            end
+          end
+  base_score + bonus
 end
 puts point
 
