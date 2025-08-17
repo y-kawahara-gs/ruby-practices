@@ -15,11 +15,7 @@ point = frames.take(10).each_with_index.sum do |frame, index|
             frames[index + 1][0]
           else
             next_score = frames[index + 1].sum
-            if frames[index + 1][0] == 10
-              next_score + frames[index + 2][0]
-            else
-              next_score
-            end
+            next_score += frames[index + 2][0] if frames[index + 1][0] == 10
           end
   base_score + bonus
 end
