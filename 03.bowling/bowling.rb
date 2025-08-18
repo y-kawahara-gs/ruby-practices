@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
+require 'debug'
 
 score = ARGV[0]
 scores = score.split(',')
@@ -16,6 +17,7 @@ point = frames.take(10).each_with_index.sum do |frame, index|
           else
             next_score = frames[index + 1].sum
             next_score += frames[index + 2][0] if frames[index + 1][0] == 10
+            next_score
           end
   base_score + bonus
 end
