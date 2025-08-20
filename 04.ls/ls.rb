@@ -3,15 +3,14 @@
 
 def contents
   path = File.absolute_path('.')
-  files = Dir.entries(path).sort.reject {
-    |element| element.start_with?('.')
-  }
+  files = Dir.entries(path).sort.reject do |element|
+    element.start_with?('.')
+  end
 
   cols = 3
   rows = (files.length.to_f / cols).ceil
   files_array = Array.new(rows) { Array.new(cols) }
-  count = -1
- 
+
   files.each_with_index do |file, index|
     row = index % rows
     col = index / rows
@@ -21,7 +20,7 @@ def contents
 end
 
 def print_ls
-  contents.each_with_index do |file_array, index|
+  contents.each do |file_array|
     file_array.each do |file|
       print "#{file}  "
     end
