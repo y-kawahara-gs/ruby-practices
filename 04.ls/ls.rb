@@ -8,7 +8,7 @@ def contents
   end
 
   cols = 3
-  rows = (files.length.to_f / cols).ceil
+  rows = files.length.ceildiv(cols)
   files_array = Array.new(rows) { Array.new(cols) }
 
   files.each_with_index do |file, index|
