@@ -9,7 +9,7 @@ def contents
 
   cols = 3
   rows = files.length.ceildiv(cols)
-  files_array = Array.new(rows) { Array.new(cols) }
+  files_arrays = Array.new(rows) { Array.new(cols) }
 
   files.each_with_index do |file, index|
     row = index % rows
