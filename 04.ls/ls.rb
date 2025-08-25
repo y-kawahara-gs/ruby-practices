@@ -4,14 +4,14 @@
 def contents
   files = Dir.glob("*")
   rows = files.length.ceildiv(3)
-  files_arrays = Array.new(rows) { Array.new(3) }
+  file_grid = Array.new(rows) { Array.new(3) }
 
   files.each_with_index do |file, index|
     row = index % rows
     col = index / rows
-    files_arrays[row][col] = file
+    file_grid[row][col] = file
   end
-  files_arrays
+  file_grid
 end
 
 def print_ls
