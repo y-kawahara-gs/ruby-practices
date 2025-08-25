@@ -3,10 +3,8 @@
 
 def contents
   files = Dir.glob("*")
-
-  cols = 3
-  rows = files.length.ceildiv(cols)
-  files_arrays = Array.new(rows) { Array.new(cols) }
+  rows = files.length.ceildiv(3)
+  files_arrays = Array.new(rows) { Array.new(3) }
 
   files.each_with_index do |file, index|
     row = index % rows
