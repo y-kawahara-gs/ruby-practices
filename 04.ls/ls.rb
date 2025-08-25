@@ -2,10 +2,7 @@
 # frozen_string_literal: true
 
 def contents
-  path = File.absolute_path('.')
-  files = Dir.entries(path).sort.reject do |element|
-    element.start_with?('.')
-  end
+  files = Dir.glob("*")
 
   cols = 3
   rows = files.length.ceildiv(cols)
