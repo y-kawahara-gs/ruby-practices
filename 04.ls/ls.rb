@@ -14,14 +14,14 @@ def contents
   files.each_with_index do |file, index|
     row = index % rows
     col = index / rows
-    files_array[row][col] = file
+    files_arrays[row][col] = file
   end
-  files_array
+  files_arrays
 end
 
 def print_ls
-  contents.each do |file_array|
-    file_array.each do |file|
+  contents.each do |file_arrays|
+    file_arrays.each do |file|
       print "#{file}  "
     end
     print "\n"
