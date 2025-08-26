@@ -15,8 +15,8 @@ def contents
 end
 
 def print_ls
-  contents.each do |file_arrays|
-    file_arrays.each do |file|
+  contents.each do |file_rows|
+    file_rows.each do |file|
       print "#{file}  "
     end
     print "\n"
