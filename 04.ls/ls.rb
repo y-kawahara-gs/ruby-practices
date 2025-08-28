@@ -6,13 +6,15 @@ opt = OptionParser.new
 opt.on('-a') { |v| p v }
 
 def contents
+  files = Dir.glob("*")
   if ARGV.any?(/-\w/) == true
     if ARGV.any?(/a/) == true
       files = Dir.glob("*", File::FNM_DOTMATCH)
     end
-  else
-    files = Dir.glob("*")
+  elsif ARGV.include?('-') == true
+    raise OptionParser::InvalidOption
   end
+
   rows = files.length.ceildiv(3)
   file_rows = Array.new(rows) { Array.new(3) }
 
