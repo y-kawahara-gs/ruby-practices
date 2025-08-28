@@ -1,8 +1,18 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
+require 'optparse'
+
+opt = OptionParser.new
+opt.on('-a') { |v| p v }
 
 def contents
-  files = Dir.glob("*")
+  if ARGV.any?(/-\w/) == true
+    if ARGV.any?(/a/) == true
+      files = Dir.glob("*", File::FNM_DOTMATCH)
+    end
+  else
+    files = Dir.glob("*")
+  end
   rows = files.length.ceildiv(3)
   file_rows = Array.new(rows) { Array.new(3) }
 
