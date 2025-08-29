@@ -3,18 +3,16 @@
 require 'optparse'
 
 opt = OptionParser.new
-opt.on('-a') { |v| p v }
+@option = {}
+opt.on('-a') { |v| @option[:a] = v }
+opt.parse!(ARGV)
 
 def contents
-  files = Dir.glob("*")
-  if ARGV.any?(/-\w/) == true
-    if ARGV.any?(/a/) == true
+  if @option[:a] == true
       files = Dir.glob("*", File::FNM_DOTMATCH)
-    end
-  elsif ARGV.include?('-') == true
-    raise OptionParser::InvalidOption
+  else
+    files = Dir.glob("*")
   end
-
   rows = files.length.ceildiv(3)
   file_rows = Array.new(rows) { Array.new(3) }
 
