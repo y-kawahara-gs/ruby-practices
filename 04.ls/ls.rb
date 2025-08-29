@@ -9,10 +9,11 @@ opt.parse!(ARGV)
 
 def contents
   if @option[:a] == true
-      files = Dir.glob("*", File::FNM_DOTMATCH)
+    option_a = File::FNM_DOTMATCH
   else
-    files = Dir.glob("*")
+    option_a = 0
   end
+  files = Dir.glob("*", option_a)
   rows = files.length.ceildiv(3)
   file_rows = Array.new(rows) { Array.new(3) }
 
