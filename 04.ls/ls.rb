@@ -8,11 +8,7 @@ opt.on('-a') { |v| $option[:a] = v }
 opt.parse!(ARGV)
 
 def contents
-  if $option[:a] == true
-    option_a = File::FNM_DOTMATCH
-  else
-    option_a = 0
-  end
+  option_a = ($option[:a] == true ? File::FNM_DOTMATCH : 0)
   files = Dir.glob("*", option_a)
   rows = files.length.ceildiv(3)
   file_rows = Array.new(rows) { Array.new(3) }
