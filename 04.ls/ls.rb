@@ -3,12 +3,12 @@
 require 'optparse'
 
 opt = OptionParser.new
-@option = {}
-opt.on('-a') { |v| @option[:a] = v }
+$option = {}
+opt.on('-a') { |v| $option[:a] = v }
 opt.parse!(ARGV)
 
 def contents
-  if @option[:a] == true
+  if $option[:a] == true
     option_a = File::FNM_DOTMATCH
   else
     option_a = 0
