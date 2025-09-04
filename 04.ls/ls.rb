@@ -11,7 +11,7 @@ def contents
 
   option_a = (option[:a] == true ? File::FNM_DOTMATCH : 0)
   files = Dir.glob("*", option_a)
-  files = files.reverse if option[:r] == true
+  files = files.reverse if option[:r]
   rows = files.length.ceildiv(3)
   file_rows = Array.new(rows) { Array.new(3) }
 
