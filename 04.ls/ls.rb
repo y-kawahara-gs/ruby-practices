@@ -6,10 +6,12 @@ def contents
   opt = OptionParser.new
   option = {}
   opt.on('-a') { |v| option[:a] = v }
+  opt.on('-r') { |v| option[:r] = v }
   opt.parse!(ARGV)
 
   option_a = (option[:a] == true ? File::FNM_DOTMATCH : 0)
   files = Dir.glob("*", option_a)
+  files = files.reverse if option[:r]
   rows = files.length.ceildiv(3)
   file_rows = Array.new(rows) { Array.new(3) }
 
