@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
+
 require 'optparse'
 require 'etc'
 require 'date'
@@ -20,9 +21,8 @@ end
 
 def details(**options)
   option_a = (options[:a] == true ? File::FNM_DOTMATCH : 0)
-  files = Dir.glob("*", option_a)
+  files = Dir.glob('*', option_a)
   files = files.reverse if options[:r]
-    
   rows = files.length.ceildiv(3)
   file_rows = Array.new(rows) { Array.new(3) }
   files.each_with_index do |file, index|
@@ -41,21 +41,10 @@ def display(**options)
     details(**opt).each do |file|
       info = File.stat(file)
       mode = info.mode.to_s(8)
+      mode.insert(0, '0') if mode.length == 5
       permission(mode)
-
-      link = info.nlink
-      owner = Etc.getpwuid(info.uid).name
-      group = Etc.getpwuid(info.gid).name
-      byte = info.size
-      time = info.mtime
-
-      print " #{link} #{owner} #{group} "
-      print "#{byte} ".rjust(5)
-      print "#{time.to_date.strftime('%b')}"
-      print "#{time.to_date.strftime('%e')} ".rjust(4)
-      print "#{time.strftime('%H')}:#{time.strftime('%M')} "
-      print "#{file}\n"
-    end
+      l_option(info, file)
+   end
   else
     details(**opt).each do |file_rows|
       file_rows.each do |file|
@@ -71,11 +60,10 @@ def total(**options)
   total_size = details(**opt).each.sum do |one_size|
     File.stat(one_size).blocks
   end
-  puts "total #{total_size/2}"
+  puts "total #{total_size / 2}"
 end
 
 def permission(mode)
-  mode.insert(0, '0') if mode.length == 5
   case mode[0, 2]
   when '14' then print 's'
   when '12' then print 'l'
@@ -84,8 +72,7 @@ def permission(mode)
   when '04' then print 'd'
   when '02' then print 'c'
   end
-  
-  for num in 3..5 do
+  (3..5).each do |num|
     case mode[num]
     when '0' then print '---'
     when '1' then print '--x'
@@ -99,4 +86,18 @@ def permission(mode)
   end
 end
 
+def l_option(info, file)
+      link = info.nlink
+      owner = Etc.getpwuid(info.uid).name
+      group = Etc.getpwuid(info.gid).name
+      byte = info.size
+      time = info.mtime
+
+      print " #{link} #{owner} #{group} "
+      print "#{byte} ".rjust(5)
+      print time.strftime('%b')
+      print "#{time.strftime('%e')} ".rjust(4)
+      print time.strftime('%R')
+      print " #{file}\n"
+    end
 main
