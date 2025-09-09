@@ -41,7 +41,8 @@ class Display < Contents
     if @@option[:l]
       Display.total
       details.each do |file|
-        mode = File.stat(file).mode.to_s(8)
+        info = File.stat(file)
+        mode = info.mode.to_s(8)
 
         mode.gsub!(/14+(\d{4})/, 's\\1')
         mode.gsub!(/12+(\d{4})/, 'l\\1')
@@ -63,12 +64,12 @@ class Display < Contents
           mode.gsub!(/6+(\d{#{p}})$/, 'rw-\\1')
           mode.gsub!(/7+(\d{#{p}})$/, 'rwx\\1')
         end
-        
-        link = File.stat(file).nlink
-        owner = Etc.getpwuid(File.stat(file).uid).name
-        group = Etc.getpwuid(File.stat(file).gid).name
-        byte = File.stat(file).size
-        time = File.stat(file).mtime
+
+        link = info.nlink
+        owner = Etc.getpwuid(info.uid).name
+        group = Etc.getpwuid(info.gid).name
+        byte = info.size
+        time = info.mtime
 
         print "#{mode} #{link} #{owner} #{group} "
         print "#{byte} ".rjust(5)
