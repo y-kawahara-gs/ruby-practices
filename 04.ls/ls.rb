@@ -41,25 +41,28 @@ def display(**options)
       info = File.stat(file)
       mode = info.mode.to_s(8)
 
-      mode.gsub!(/14+(\d{4})/, 's\\1')
-      mode.gsub!(/12+(\d{4})/, 'l\\1')
-      mode.gsub!(/10+(\d{4})/, '-\\1')
-      mode.gsub!(/6+(\d{4})/, 'b\\1')
-      mode.gsub!(/4+(\d{4})/, 'd\\1')
-      mode.gsub!(/2+(\d{4})/, 'c\\1')
-      mode.gsub!(/1+(\d{4})/, 'p\\1')
+      mode.insert(0, '0') if mode.length == 5
 
-      mode.gsub!(/0+(\d{3})/, '\\1')
+      case mode[0, 2]
+      when '14' then print 's'
+      when '12' then print 'l'
+      when '10' then print '-'
+      when '06' then print 'b'
+      when '04' then print 'd'
+      when '02' then print 'c'
+      end
 
-      2.downto(0) do |p|
-        mode.gsub!(/0+(\d{#{p}})$/, '---\\1')
-        mode.gsub!(/1+(\{{#{p}})$/, '--x\\1')
-        mode.gsub!(/2+(\d{#{p}})$/, '-w-\\1')
-        mode.gsub!(/3+(\d{#{p}})$/, '-wx\\1')
-        mode.gsub!(/4+(\d{#{p}})$/, 'r--\\1')
-        mode.gsub!(/5+(\d{#{p}})$/, 'r-x\\1')
-        mode.gsub!(/6+(\d{#{p}})$/, 'rw-\\1')
-        mode.gsub!(/7+(\d{#{p}})$/, 'rwx\\1')
+      for num in 3..5 do
+        case mode[num]
+        when '0' then print '---'
+        when '1' then print '--x'
+        when '2' then print '-w-'
+        when '3' then print '-wx'
+        when '4' then print 'r--'
+        when '5' then print 'r-x'
+        when '6' then print 'rw-'
+        when '7' then print 'rwx'
+        end
       end
 
       link = info.nlink
@@ -68,7 +71,7 @@ def display(**options)
       byte = info.size
       time = info.mtime
 
-      print "#{mode} #{link} #{owner} #{group} "
+      print " #{link} #{owner} #{group} "
       print "#{byte} ".rjust(5)
       print "#{time.to_date.strftime('%b')}"
       print "#{time.to_date.strftime('%e')} ".rjust(4)
