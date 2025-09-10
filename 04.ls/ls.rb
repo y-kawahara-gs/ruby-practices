@@ -19,7 +19,7 @@ def option
   options
 end
 
-def details(**options)
+def get_file(**options)
   option_a = (options[:a] ? File::FNM_DOTMATCH : 0)
   files = Dir.glob('*', option_a)
   files = files.reverse if options[:r]
@@ -36,17 +36,18 @@ end
 def display(**options)
   opt = options
   if options[:l]
-    total_size = details(**opt).each.sum { |one_size| File.stat(one_size).blocks }
+    total_size = get_file(**opt).each.sum { |one_size| File.stat(one_size).blocks }
     puts "total #{total_size / 2}"
-    details(**opt).each do |file|
+    get_file(**opt).each do |file|
       info = File.stat(file)
       mode = info.mode.to_s(8)
       mode.insert(0, '0') if mode.length == 5
-      permission(mode)
+      print_type(mode)
+      print_permission(mode)
       l_option(info, file)
-   end
+    end
   else
-    details(**opt).each do |file_rows|
+    get_file(**opt).each do |file_rows|
       file_rows.each do |file|
         print "#{file}  "
       end
@@ -55,26 +56,33 @@ def display(**options)
   end
 end
 
-def permission(mode)
-  case mode[0, 2]
-  when '14' then print 's'
-  when '12' then print 'l'
-  when '10' then print '-'
-  when '06' then print 'b'
-  when '04' then print 'd'
-  when '02' then print 'c'
-  end
+def print_type(mode)
+  type =
+    {
+      '14' => 's',
+      '12' => 'l',
+      '10' => '-',
+      '06' => 'b',
+      '04' => 'd',
+      '02' => 'c'
+    }[mode[0, 2]]
+  print type
+end
+
+def print_permission(mode)
   (3..5).each do |num|
-    case mode[num]
-    when '0' then print '---'
-    when '1' then print '--x'
-    when '2' then print '-w-'
-    when '3' then print '-wx'
-    when '4' then print 'r--'
-    when '5' then print 'r-x'
-    when '6' then print 'rw-'
-    when '7' then print 'rwx'
-    end
+    permission =
+      {
+        '0' => '---',
+        '1' => '--x',
+        '2' => '-w-',
+        '3' => '-wx',
+        '4' => 'r--',
+        '5' => 'r-x',
+        '6' => 'rw-',
+        '7' => 'rwx'
+      }[mode[num]]
+    print permission
   end
 end
 
@@ -84,7 +92,7 @@ def l_option(info, file)
   group = Etc.getpwuid(info.gid).name
   byte = info.size
   time = info.mtime
-  
+
   print " #{link} #{owner} #{group} "
   print "#{byte} ".rjust(5)
   print time.strftime('%b')
