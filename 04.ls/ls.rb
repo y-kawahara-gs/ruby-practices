@@ -20,7 +20,7 @@ def option
 end
 
 def details(**options)
-  option_a = (options[:a] == true ? File::FNM_DOTMATCH : 0)
+  option_a = (options[:a] ? File::FNM_DOTMATCH : 0)
   files = Dir.glob('*', option_a)
   files = files.reverse if options[:r]
   rows = files.length.ceildiv(3)
@@ -30,14 +30,14 @@ def details(**options)
     col = index / rows
     file_rows[row][col] = file
   end
-  options[:l] == true ? files : file_rows
+  options[:l] ? files : file_rows
 end
 
 def display(**options)
   opt = options
   if options[:l]
-    total(**opt)
-
+    total_size = details(**opt).each.sum { |one_size| File.stat(one_size).blocks }
+    puts "total #{total_size / 2}"
     details(**opt).each do |file|
       info = File.stat(file)
       mode = info.mode.to_s(8)
@@ -53,14 +53,6 @@ def display(**options)
       print "\n"
     end
   end
-end
-
-def total(**options)
-  opt = options
-  total_size = details(**opt).each.sum do |one_size|
-    File.stat(one_size).blocks
-  end
-  puts "total #{total_size / 2}"
 end
 
 def permission(mode)
