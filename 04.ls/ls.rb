@@ -34,8 +34,7 @@ def display(**options)
     puts "total #{total_size / 2}"
     files.each do |file|
       info = File.stat(file)
-      mode = info.mode.to_s(8)
-      mode.insert(0, '0') if mode.length == 5
+      mode = info.mode.to_s(8).rjust(6, '0')
       print_type(mode)
       print_permission(mode)
       l_option(info, file)
