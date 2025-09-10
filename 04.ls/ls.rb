@@ -87,17 +87,18 @@ def permission(mode)
 end
 
 def l_option(info, file)
-      link = info.nlink
-      owner = Etc.getpwuid(info.uid).name
-      group = Etc.getpwuid(info.gid).name
-      byte = info.size
-      time = info.mtime
+  link = info.nlink
+  owner = Etc.getpwuid(info.uid).name
+  group = Etc.getpwuid(info.gid).name
+  byte = info.size
+  time = info.mtime
+  
+  print " #{link} #{owner} #{group} "
+  print "#{byte} ".rjust(5)
+  print time.strftime('%b')
+  print "#{time.strftime('%e')} ".rjust(4)
+  print time.strftime('%R')
+  print " #{file}\n"
+end
 
-      print " #{link} #{owner} #{group} "
-      print "#{byte} ".rjust(5)
-      print time.strftime('%b')
-      print "#{time.strftime('%e')} ".rjust(4)
-      print time.strftime('%R')
-      print " #{file}\n"
-    end
 main
