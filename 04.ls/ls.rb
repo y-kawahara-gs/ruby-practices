@@ -33,11 +33,7 @@ def display(**options)
     total_size = files.each.sum { |one_size| File.stat(one_size).blocks }
     puts "total #{total_size / 2}"
     files.each do |file|
-      info = File.stat(file)
-      mode = info.mode.to_s(8).rjust(6, '0')
-      print_type(mode)
-      print_permission(mode)
-      l_option(info, file)
+      l_option(file)
     end
   else
     no_l_option(files)
@@ -74,7 +70,11 @@ def print_permission(mode)
   end
 end
 
-def l_option(info, file)
+def l_option(file)
+  info = File.stat(file)
+  mode = info.mode.to_s(8).rjust(6, '0')
+  print_type(mode)
+  print_permission(mode)
   puts [
     '',
     info.nlink,
@@ -84,7 +84,7 @@ def l_option(info, file)
     info.mtime.strftime('%b'),
     info.mtime.strftime('%e').rjust(2),
     info.mtime.strftime('%R'),
-    file,
+    file
   ].join(' ')
 end
 
