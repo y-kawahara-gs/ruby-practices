@@ -75,18 +75,17 @@ def print_permission(mode)
 end
 
 def l_option(info, file)
-  link = info.nlink
-  owner = Etc.getpwuid(info.uid).name
-  group = Etc.getpwuid(info.gid).name
-  byte = info.size
-  time = info.mtime
-
-  print " #{link} #{owner} #{group} "
-  print "#{byte} ".rjust(5)
-  print time.strftime('%b')
-  print "#{time.strftime('%e')} ".rjust(4)
-  print time.strftime('%R')
-  print " #{file}\n"
+  puts [
+    '',
+    info.nlink,
+    Etc.getpwuid(info.uid).name,
+    Etc.getpwuid(info.gid).name,
+    info.size.to_s.rjust(4),
+    info.mtime.strftime('%b'),
+    info.mtime.strftime('%e').rjust(2),
+    info.mtime.strftime('%R'),
+    file,
+  ].join(' ')
 end
 
 def no_l_option(files)
