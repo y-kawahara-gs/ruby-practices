@@ -81,9 +81,7 @@ def print_file_details(file)
     Etc.getpwuid(info.uid).name,
     Etc.getpwuid(info.gid).name,
     info.size.to_s.rjust(4),
-    info.mtime.strftime('%b'),
-    info.mtime.strftime('%e').rjust(2),
-    info.mtime.strftime('%R'),
+    info.mtime.strftime('%b %e %R'),
     file
   ].join(' ')
 end
