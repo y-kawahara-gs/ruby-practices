@@ -30,11 +30,7 @@ def display(**options)
   opt = options
   files = get_file(**opt)
   if options[:l]
-    total_size = files.each.sum { |one_size| File.stat(one_size).blocks }
-    puts "total #{total_size / 2}"
-    files.each do |file|
-      print_file_details(file)
-    end
+    print_file_details(files)
   else
     print_files(files)
   end
@@ -70,20 +66,24 @@ def print_permission(mode)
   end
 end
 
-def print_file_details(file)
-  info = File.stat(file)
-  mode = info.mode.to_s(8).rjust(6, '0')
-  print_type(mode)
-  print_permission(mode)
-  puts [
-    '',
-    info.nlink,
-    Etc.getpwuid(info.uid).name,
-    Etc.getpwuid(info.gid).name,
-    info.size.to_s.rjust(4),
-    info.mtime.strftime('%b %e %R'),
-    file
-  ].join(' ')
+def print_file_details(files)
+  total_size = files.each.sum { |one_size| File.stat(one_size).blocks }
+  puts "total #{total_size / 2}"
+  files.each do |file|
+    info = File.stat(file)
+    mode = info.mode.to_s(8).rjust(6, '0')
+    print_type(mode)
+    print_permission(mode)
+    puts [
+      '',
+      info.nlink,
+      Etc.getpwuid(info.uid).name,
+      Etc.getpwuid(info.gid).name,
+      info.size.to_s.rjust(4),
+      info.mtime.strftime('%b %e %R'),
+      file
+    ].join(' ')
+  end
 end
 
 def print_files(files)
