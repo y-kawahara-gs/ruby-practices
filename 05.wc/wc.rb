@@ -15,7 +15,7 @@ end
 
 def main(**options)
   opt = options
-  if ARGV == []
+  if ARGV.empty?
     print_standard(**opt)
   else
     all = { lines: 0, words: 0, capacity: 0 }
