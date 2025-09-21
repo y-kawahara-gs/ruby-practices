@@ -23,11 +23,12 @@ def main(**option)
       contents = []
       content = File.read(path)
       content.split(' ').each_with_index { |word, index| contents[index] = word }
-      print_wc_details(content.count("\n"), contents.size, File.size(path), option)
+      lines, words, capacity = [content.count("\n"), contents.size, File.size(path)]
+      print_wc_details(lines, words, capacity, option)
       print "#{path}\n"
-      all[:lines] += content.count("\n")
-      all[:words] += contents.size
-      all[:capacity] += File.size(path)
+      all[:lines] += lines
+      all[:words] += words
+      all[:capacity] += capacity
     end
     return unless paths.size != 1
 
