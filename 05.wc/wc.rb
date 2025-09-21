@@ -38,18 +38,9 @@ def main(**option)
 end
 
 def print_wc_details(lines, words, capacity, option)
-  if option == {}
-    print [
-      lines,
-      words,
-      capacity,
-      ''
-    ].join(' ')
-  else
-    print "#{lines} " if option[:l]
-    print "#{words} " if option[:w]
-    print "#{capacity} " if option[:c]
-  end
+  print "#{lines} " if option[:l] || option == {}
+  print "#{words} " if option[:w] || option == {}
+  print "#{capacity} " if option[:c] || option == {}
 end
 
 def print_standard(option)
