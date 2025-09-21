@@ -20,10 +20,8 @@ def main(**option)
     all = { lines: 0, words: 0, capacity: 0 }
     paths = ARGV
     paths.each do |path|
-      contents = []
       content = File.read(path)
-      content.split(' ').each_with_index { |word, index| contents[index] = word }
-      lines, words, capacity = [content.count("\n"), contents.size, File.size(path)]
+      lines, words, capacity = wc_details(content, path)
       print_wc_details(lines, words, capacity, option)
       print "#{path}\n"
       all[:lines] += lines
@@ -44,14 +42,23 @@ def print_wc_details(lines, words, capacity, option)
 end
 
 def print_standard(option)
-  line_break = 0
-  byte = 0
+  contents = ""
   while (path = $stdin.gets)
-    line_break += 1
-    byte += path.bytesize
-    ARGV << path.chomp.split(' ')
+    contents += path
   end
-  print_wc_details(line_break, ARGV.flatten.size, byte, option)
+  lines, words, capacity = wc_details(contents)
+  print_wc_details(lines, words, capacity, option)
+end
+
+def wc_details(content, path = "")
+  contents = []
+  content.split(' ').each_with_index { |word, index| contents[index] = word }
+  if File.exist?(path)
+    capacity = File.size(path)
+  else
+    capacity = content.bytesize
+  end
+  return [content.count("\n"), contents.size, capacity]
 end
 
 main(**option)
