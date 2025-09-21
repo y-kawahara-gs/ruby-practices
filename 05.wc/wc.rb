@@ -30,7 +30,7 @@ def main(**option)
       all[:words] += words
       all[:capacity] += capacity
     end
-    return unless paths.size != 1
+    return if paths.size == 1
 
     print_wc_details(all[:lines], all[:words], all[:capacity], option)
     print 'total'
