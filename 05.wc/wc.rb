@@ -13,10 +13,9 @@ def option
   options
 end
 
-def main(**options)
-  opt = options
+def main(**option)
   if ARGV.empty?
-    print_standard(**opt)
+    print_standard(option)
   else
     all = { lines: 0, words: 0, capacity: 0 }
     paths = ARGV
@@ -24,7 +23,7 @@ def main(**options)
       load_contents = Array.new(0)
       contents = File.read(path)
       contents.split(' ').each_with_index { |word, index| load_contents[index] = word }
-      print_wc_details(contents.count("\n"), load_contents.size, File.size(path), **opt)
+      print_wc_details(contents.count("\n"), load_contents.size, File.size(path), option)
       print "#{path}\n"
       all[:lines] += contents.count("\n")
       all[:words] += load_contents.size
@@ -32,13 +31,13 @@ def main(**options)
     end
     return unless paths.size != 1
 
-    print_wc_details(all[:lines], all[:words], all[:capacity], **opt)
+    print_wc_details(all[:lines], all[:words], all[:capacity], option)
     print 'total'
   end
 end
 
-def print_wc_details(lines, words, capacity, **opt)
-  if opt == {}
+def print_wc_details(lines, words, capacity, option)
+  if option == {}
     print [
       lines,
       words,
@@ -46,14 +45,13 @@ def print_wc_details(lines, words, capacity, **opt)
       ''
     ].join(' ')
   else
-    print "#{lines} " if opt[:l]
-    print "#{words} " if opt[:w]
-    print "#{capacity} " if opt[:c]
+    print "#{lines} " if option[:l]
+    print "#{words} " if option[:w]
+    print "#{capacity} " if option[:c]
   end
 end
 
-def print_standard(**options)
-  opt = options
+def print_standard(option)
   line_break = 0
   byte = 0
   while (path = $stdin.gets)
@@ -61,8 +59,7 @@ def print_standard(**options)
     byte += path.bytesize
     ARGV << path.chomp.split(' ')
   end
-  print_wc_details(line_break, ARGV.flatten.size, byte, **opt)
+  print_wc_details(line_break, ARGV.flatten.size, byte, option)
 end
-
 
 main(**option)
