@@ -3,10 +3,6 @@
 
 require 'optparse'
 
-def main
-  display(**option)
-end
-
 def option
   options = {}
   opt = OptionParser.new
@@ -17,7 +13,7 @@ def option
   options
 end
 
-def display(**options)
+def main(**options)
   opt = options
   if ARGV == []
     print_standard(**opt)
@@ -68,4 +64,5 @@ def print_standard(**options)
   print_wc_details(line_break, ARGV.flatten.size, byte, **opt)
 end
 
-main
+
+main(**option)
