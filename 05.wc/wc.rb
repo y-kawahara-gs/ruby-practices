@@ -20,13 +20,13 @@ def main(**option)
     all = { lines: 0, words: 0, capacity: 0 }
     paths = ARGV
     paths.each do |path|
-      load_contents = Array.new(0)
-      contents = File.read(path)
-      contents.split(' ').each_with_index { |word, index| load_contents[index] = word }
-      print_wc_details(contents.count("\n"), load_contents.size, File.size(path), option)
+      contents = []
+      content = File.read(path)
+      content.split(' ').each_with_index { |word, index| contents[index] = word }
+      print_wc_details(content.count("\n"), contents.size, File.size(path), option)
       print "#{path}\n"
-      all[:lines] += contents.count("\n")
-      all[:words] += load_contents.size
+      all[:lines] += content.count("\n")
+      all[:words] += contents.size
       all[:capacity] += File.size(path)
     end
     return unless paths.size != 1
