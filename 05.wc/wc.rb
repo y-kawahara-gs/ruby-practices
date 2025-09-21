@@ -17,48 +17,72 @@ def main(**option)
   if ARGV.empty?
     print_standard(option)
   else
-    all = { lines: 0, words: 0, capacity: 0 }
-    paths = ARGV
-    paths.each do |path|
-      content = File.read(path)
-      lines, words, capacity = wc_details(content, path)
-      print_wc_details(lines, words, capacity, option)
-      print "#{path}\n"
-      all[:lines] += lines
-      all[:words] += words
-      all[:capacity] += capacity
-    end
-    return if paths.size == 1
-
-    print_wc_details(all[:lines], all[:words], all[:capacity], option)
-    print 'total'
+    print_argument(option)
   end
 end
 
-def print_wc_details(lines, words, capacity, option)
-  print "#{lines} " if option[:l] || option == {}
-  print "#{words} " if option[:w] || option == {}
-  print "#{capacity} " if option[:c] || option == {}
+def print_argument(option)
+  paths = ARGV
+  wc_rows = []
+  counter = []
+  paths.each_with_index do |path, index|
+    content = File.read(path)
+    wc_rows[index] = wc_details(option, content)
+    wc_details(option, content).each_with_index do |point, i|
+      counter[i] = (counter[i] || 0) + point
+    end
+    wc_rows[index] << path
+  end
+
+  if paths.size != 1
+    counter << 'total'
+    wc_rows << counter
+  end
+  adjust(wc_rows)
 end
 
 def print_standard(option)
-  contents = ""
+  content = ''
   while (path = $stdin.gets)
-    contents += path
+    content += path
   end
-  lines, words, capacity = wc_details(contents)
-  print_wc_details(lines, words, capacity, option)
+  print wc_details(option, content) * ' '
 end
 
-def wc_details(content, path = "")
+def wc_details(option, content, path = '')
+  wc_row = []
   contents = []
   content.split(' ').each_with_index { |word, index| contents[index] = word }
-  if File.exist?(path)
-    capacity = File.size(path)
-  else
-    capacity = content.bytesize
+  capacity = if File.exist?(path)
+               File.size(path)
+             else
+               content.bytesize
+             end
+  no_option = option.empty?
+  all_details = {
+    l: content.count("\n"),
+    w: content.size,
+    c: capacity
+  }
+  all_details.each do |key, value|
+    wc_row << value if option[key] || no_option
   end
-  return [content.count("\n"), contents.size, capacity]
+  wc_row
+end
+
+def adjust(wc_rows)
+  data = wc_rows.map { |row| row.map(&:to_s) }
+  columns = data.transpose
+  widths = columns.map do |column|
+    column.map(&:length).max
+  end
+
+  data.each do |row|
+    target_element = row.map.with_index do |element, i|
+      element.rjust(widths[i])
+    end
+    puts target_element.join(' ')
+  end
 end
 
 main(**option)
