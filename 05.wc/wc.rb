@@ -3,6 +3,14 @@
 
 require 'optparse'
 
+def main(**option)
+  if ARGV.empty?
+    print_standard(option)
+  else
+    print_argument(option)
+  end
+end
+
 def option
   options = {}
   opt = OptionParser.new
@@ -13,76 +21,60 @@ def option
   options
 end
 
-def main(**option)
-  if ARGV.empty?
-    print_standard(option)
-  else
-    print_argument(option)
-  end
-end
-
 def print_argument(option)
   paths = ARGV
-  wc_rows = []
-  counter = []
-  paths.each_with_index do |path, index|
+  wc_rows = paths.map do |path|
     content = File.read(path)
-    wc_rows[index] = wc_details(option, content)
-    wc_details(option, content).each_with_index do |point, i|
-      counter[i] = (counter[i] || 0) + point
-    end
-    wc_rows[index] << path
+    temporary_details = get_wc_details(content)
+    temporary_details << path
+    temporary_details
   end
 
-  if paths.size != 1
-    counter << 'total'
-    wc_rows << counter
+  if paths.size > 1
+    total = wc_rows.transpose.map do |row|
+      row.sum if row.all? { |row| row.instance_of?(Integer) }
+    end
+    wc_rows << total.map { |row| row.nil? ? 'total' : row }
   end
-  adjust(wc_rows)
+  print_adjusted_wc(wc_rows, option)
 end
 
 def print_standard(option)
-  content = ''
-  while (path = $stdin.gets)
-    content += path
+  contents = ''
+  while (content = $stdin.gets)
+    contents += content
   end
-  print wc_details(option, content) * ' '
+  puts judge_option(get_wc_details(contents), option).join(' ')
 end
 
-def wc_details(option, content, path = '')
-  wc_row = []
+def get_wc_details(content)
   contents = []
   content.split(' ').each_with_index { |word, index| contents[index] = word }
-  capacity = if File.exist?(path)
-               File.size(path)
-             else
-               content.bytesize
-             end
-  no_option = option.empty?
-  all_details = {
-    l: content.count("\n"),
-    w: content.size,
-    c: capacity
-  }
-  all_details.each do |key, value|
-    wc_row << value if option[key] || no_option
-  end
-  wc_row
+  [content.count("\n"), contents.size, content.bytesize]
 end
 
-def adjust(wc_rows)
-  data = wc_rows.map { |row| row.map(&:to_s) }
-  columns = data.transpose
-  widths = columns.map do |column|
-    column.map(&:length).max
+def print_adjusted_wc(wc_rows, option)
+  temporary_details = wc_rows.map { |row| row.map(&:to_s) }
+  vertical_details = temporary_details.transpose
+  judge_option(vertical_details, option)
+
+  widths = vertical_details.map do |vertical_values|
+    vertical_values.map(&:length).max
   end
 
-  data.each do |row|
-    target_element = row.map.with_index do |element, i|
-      element.rjust(widths[i])
+  vertical_details.transpose.each do |row|
+    columns = row.map.with_index do |column, i|
+      column.rjust(widths[i])
     end
-    puts target_element.join(' ')
+    puts columns.join(' ')
   end
+end
+
+def judge_option(wc_rows, option)
+  wc_rows.delete_at(2) unless option[:c] || option.empty?
+  wc_rows.delete_at(1) unless option[:w] || option.empty?
+  wc_rows.delete_at(0) unless option[:l] || option.empty?
+  wc_rows
 end
 
 main(**option)
