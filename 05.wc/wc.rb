@@ -3,22 +3,12 @@
 
 require 'optparse'
 
-def main(**option)
+def main(opt)
   if ARGV.empty?
-    print_standard(option)
+    print_standard(opt)
   else
-    print_argument(option)
+    print_argument(opt)
   end
-end
-
-def option
-  options = {}
-  opt = OptionParser.new
-  opt.on('-l') { |v| options[:l] = v }
-  opt.on('-w') { |v| options[:w] = v }
-  opt.on('-c') { |v| options[:c] = v }
-  opt.parse!(ARGV)
-  options
 end
 
 def print_argument(option)
@@ -77,4 +67,14 @@ def judge_option(wc_rows, option)
   wc_rows
 end
 
-main(**option)
+def load_option
+  options = {}
+  opt = OptionParser.new
+  opt.on('-l') { |v| options[:l] = v }
+  opt.on('-w') { |v| options[:w] = v }
+  opt.on('-c') { |v| options[:c] = v }
+  opt.parse!(ARGV)
+  options
+end
+
+main(load_option)
