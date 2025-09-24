@@ -3,50 +3,61 @@
 
 require 'optparse'
 
-def main(opt)
-  if ARGV.empty?
-    print_standard(opt)
+def main
+  if File.pipe?($stdin)
+    print_standard(load_options)
   else
-    print_argument(opt)
+    print_argument(load_options)
   end
 end
 
-def print_argument(option)
+def print_standard(options)
+  content = ''
+  while (line = $stdin.gets)
+    content += line
+  end
+  wc_details = get_wc_details(content)
+  puts remove_nonoptions(wc_details, options).join(' ')
+end
+
+def print_argument(options)
   paths = ARGV
+  label = %w[line words bytes path]
   wc_rows = paths.map do |path|
     content = File.read(path)
     temporary_details = get_wc_details(content)
     temporary_details << path
-    temporary_details
+    [label, temporary_details].transpose.to_h
   end
 
   if paths.size > 1
-    total = wc_rows.transpose.map do |row|
-      row.sum if row.all? { |row| row.instance_of?(Integer) }
-    end
-    wc_rows << total.map { |row| row.nil? ? 'total' : row }
+    total_hash = {
+      'line' => calculation_total(wc_rows, 'line'),
+      'words' => calculation_total(wc_rows, 'words'),
+      'bytes' => calculation_total(wc_rows, 'bytes'),
+      'total' => 'total'
+    }
   end
-  print_adjusted_wc(wc_rows, option)
+  wc_rows << total_hash
+  all_wc_rows = wc_rows.map(&:values)
+  print_adjusted_wc(all_wc_rows, options)
 end
 
-def print_standard(option)
-  contents = ''
-  while (content = $stdin.gets)
-    contents += content
+def calculation_total(wc_rows, key)
+  wc_rows.each.sum do |hash|
+    hash[key]
   end
-  puts judge_option(get_wc_details(contents), option).join(' ')
 end
 
 def get_wc_details(content)
-  contents = []
-  content.split(' ').each_with_index { |word, index| contents[index] = word }
-  [content.count("\n"), contents.size, content.bytesize]
+  words = content.split(' ')
+  [content.count("\n"), words.size, content.bytesize]
 end
 
-def print_adjusted_wc(wc_rows, option)
+def print_adjusted_wc(wc_rows, options)
   temporary_details = wc_rows.map { |row| row.map(&:to_s) }
   vertical_details = temporary_details.transpose
-  judge_option(vertical_details, option)
+  vertical_details = remove_nonoptions(vertical_details, options)
 
   widths = vertical_details.map do |vertical_values|
     vertical_values.map(&:length).max
@@ -60,14 +71,16 @@ def print_adjusted_wc(wc_rows, option)
   end
 end
 
-def judge_option(wc_rows, option)
-  wc_rows.delete_at(2) unless option[:c] || option.empty?
-  wc_rows.delete_at(1) unless option[:w] || option.empty?
-  wc_rows.delete_at(0) unless option[:l] || option.empty?
-  wc_rows
+def remove_nonoptions(wc_rows, options)
+  wc_details = []
+  wc_details << wc_rows[0] if options[:l] || options.empty?
+  wc_details << wc_rows[1] if options[:w] || options.empty?
+  wc_details << wc_rows[2] if options[:c] || options.empty?
+  wc_details << wc_rows[3]
+  wc_details
 end
 
-def load_option
+def load_options
   options = {}
   opt = OptionParser.new
   opt.on('-l') { |v| options[:l] = v }
@@ -77,4 +90,4 @@ def load_option
   options
 end
 
-main(load_option)
+main
