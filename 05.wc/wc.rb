@@ -17,7 +17,7 @@ def print_standard(options)
     content += line
   end
   wc_details = get_wc_details(content)
-  puts remove_nonoptions(wc_details, options).join(' ')
+  puts remake_by_options(wc_details, options).join(' ')
 end
 
 def print_argument(options)
@@ -44,8 +44,8 @@ def print_argument(options)
 end
 
 def calculation_total(wc_rows, key)
-  wc_rows.each.sum do |hash|
-    hash[key]
+  wc_rows.each.sum do |wc_hash|
+    wc_hash[key]
   end
 end
 
@@ -57,7 +57,7 @@ end
 def print_adjusted_wc(wc_rows, options)
   temporary_details = wc_rows.map { |row| row.map(&:to_s) }
   vertical_details = temporary_details.transpose
-  vertical_details = remove_nonoptions(vertical_details, options)
+  vertical_details = remake_by_options(vertical_details, options)
 
   widths = vertical_details.map do |vertical_values|
     vertical_values.map(&:length).max
@@ -71,7 +71,7 @@ def print_adjusted_wc(wc_rows, options)
   end
 end
 
-def remove_nonoptions(wc_rows, options)
+def remake_by_options(wc_rows, options)
   wc_details = []
   wc_details << wc_rows[0] if options[:l] || options.empty?
   wc_details << wc_rows[1] if options[:w] || options.empty?
