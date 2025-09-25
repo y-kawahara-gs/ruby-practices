@@ -16,68 +16,91 @@ def print_standard(options)
   while (line = $stdin.gets)
     content += line
   end
-  wc_details = get_wc_details(content)
-  puts remake_by_options(wc_details, options).join(' ')
+  wc_hash = {}
+  wc_hash[''] = get_wc_details(content)
+  wc_details = remake_by_options(wc_hash, options)
+  puts wc_details[''].values.join(' ')
 end
 
 def print_argument(options)
   paths = ARGV
-  label = %w[line words bytes path]
-  wc_rows = paths.map do |path|
+  wc_hash = {}
+  paths.each do |path|
     content = File.read(path)
     temporary_details = get_wc_details(content)
-    temporary_details << path
-    [label, temporary_details].transpose.to_h
+    wc_hash[path] = temporary_details
   end
-
   if paths.size > 1
     total_hash = {
-      'line' => calculation_total(wc_rows, 'line'),
-      'words' => calculation_total(wc_rows, 'words'),
-      'bytes' => calculation_total(wc_rows, 'bytes'),
-      'total' => 'total'
+      'total' => {
+        'line' => calculation_total(wc_hash, 'line'),
+        'words' => calculation_total(wc_hash, 'words'),
+        'bytes' => calculation_total(wc_hash, 'bytes')
+      }
     }
   end
-  wc_rows << total_hash
-  all_wc_rows = wc_rows.map(&:values)
-  print_adjusted_wc(all_wc_rows, options)
+
+  all_wc_hash = wc_hash.merge(total_hash)
+  print_adjusted_wc(all_wc_hash, options)
 end
 
-def calculation_total(wc_rows, key)
-  wc_rows.each.sum do |wc_hash|
-    wc_hash[key]
+def calculation_total(wc_hash, key)
+  wc_hash.each_key.sum do |wc_path|
+    wc_hash[wc_path][key]
   end
 end
 
 def get_wc_details(content)
   words = content.split(' ')
-  [content.count("\n"), words.size, content.bytesize]
+  {
+    'line' => content.count("\n"),
+    'words' => words.size,
+    'bytes' => content.bytesize
+  }
 end
 
-def print_adjusted_wc(wc_rows, options)
-  temporary_details = wc_rows.map { |row| row.map(&:to_s) }
-  vertical_details = temporary_details.transpose
-  vertical_details = remake_by_options(vertical_details, options)
+def print_adjusted_wc(all_wc_hash, options)
+  wc_hash = remake_by_options(all_wc_hash, options)
 
-  widths = vertical_details.map do |vertical_values|
-    vertical_values.map(&:length).max
+  widths = {
+    'line' => get_length(wc_hash, 'line'),
+    'words' => get_length(wc_hash, 'words'),
+    'bytes' => get_length(wc_hash, 'bytes')
+  }
+
+  keys = %w[line words bytes]
+
+  resize(wc_hash, widths, *keys)
+
+  wc_hash.each_key do |file|
+    puts [wc_hash[file].values, file].join(' ')
   end
+end
 
-  vertical_details.transpose.each do |row|
-    columns = row.map.with_index do |column, i|
-      column.rjust(widths[i])
+def resize(wc_hash, widths, *keys)
+  keys.each do |key|
+    wc_hash.each_value do |file|
+      file[key] = file[key].to_s.rjust(widths[key])
     end
-    puts columns.join(' ')
   end
 end
 
-def remake_by_options(wc_rows, options)
-  wc_details = []
-  wc_details << wc_rows[0] if options[:l] || options.empty?
-  wc_details << wc_rows[1] if options[:w] || options.empty?
-  wc_details << wc_rows[2] if options[:c] || options.empty?
-  wc_details << wc_rows[3]
-  wc_details
+def get_length(wc_hash, key)
+  values = wc_hash.keys.map do |n|
+    wc_hash[n][key]
+  end
+  max_widths = values.max_by { |value| value.to_s.length }
+  max_widths.to_s.length
+end
+
+def remake_by_options(all_wc_hash, options)
+  remaked_wc_hash = Hash.new { |hash, key| hash[key] = {} }
+  all_wc_hash.each_key do |wc_hash|
+    remaked_wc_hash[wc_hash]['line'] = all_wc_hash[wc_hash]['line'] if options[:l] || options.empty?
+    remaked_wc_hash[wc_hash]['words'] = all_wc_hash[wc_hash]['words'] if options[:w] || options.empty?
+    remaked_wc_hash[wc_hash]['bytes'] = all_wc_hash[wc_hash]['bytes'] if options[:c] || options.empty?
+  end
+  remaked_wc_hash
 end
 
 def load_options
