@@ -52,7 +52,8 @@ def print_argument(options)
 end
 
 def calculation_total(wc_hash, key)
-  wc_hash.each_key.sum do |wc_path|
+  wc_cal = wc_hash.keys
+  wc_cal.each.sum do |wc_path|
     wc_hash[wc_path][key]
   end
 end
@@ -79,7 +80,8 @@ def print_adjusted_wc(all_wc_hash, options)
 
   resize(wc_hash, widths, *keys)
 
-  wc_hash.each_key do |file|
+  wc_keys = wc_hash.keys
+  wc_keys.each do |file|
     wc_values = wc_hash[file].values
     wc_values.delete("")
     puts [wc_values, file.strip].join(' ')
@@ -87,8 +89,9 @@ def print_adjusted_wc(all_wc_hash, options)
 end
 
 def resize(wc_hash, widths, *keys)
+  resize_hash = wc_hash
   keys.each do |key|
-    wc_hash.each_value do |file|
+    resize_hash.each_value do |file|
       file[key] = file[key].to_s.rjust(widths[key])
     end
   end
