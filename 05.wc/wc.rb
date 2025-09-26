@@ -83,11 +83,11 @@ def print_adjusted_wc(all_wc_hash, options)
 
   keys = %w[line words bytes]
 
-  resize(wc_hash, widths, *keys)
+  wc_resize_hash = resize(wc_hash, widths, *keys)
 
-  wc_keys = wc_hash.keys
+  wc_keys = wc_resize_hash.keys
   wc_keys.each do |file|
-    wc_values = wc_hash[file].values
+    wc_values = wc_resize_hash[file].values
     wc_values.delete('')
     puts [wc_values, file.strip].join(' ')
   end
@@ -100,6 +100,7 @@ def resize(wc_hash, widths, *keys)
       file[key] = file[key].to_s.rjust(widths[key])
     end
   end
+  resize_hash
 end
 
 def get_length(wc_hash, key)
