@@ -5,24 +5,25 @@ require 'optparse'
 
 def main
   if File.pipe?($stdin)
-    print_standard(load_options)
+    print_standard
   else
-    print_argument(load_options)
+    print_argument
   end
 end
 
-def print_standard(options)
+def print_standard
   content = ''
   while (line = $stdin.gets)
     content += line
   end
   wc_hash = {}
   wc_hash[''] = get_wc_details(content)
-  wc_details = remake_by_options(wc_hash, options)
+  wc_details = remake_by_options(wc_hash, load_options)
   puts wc_details[''].values.join(' ')
 end
 
-def print_argument(options)
+def print_argument
+  options = load_options
   paths = ARGV
   wc_hash = {}
   paths.each_with_index do |path, index|
