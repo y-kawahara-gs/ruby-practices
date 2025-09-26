@@ -25,10 +25,15 @@ end
 def print_argument(options)
   paths = ARGV
   wc_hash = {}
-  paths.each do |path|
+  paths.each_with_index do |path, index|
     content = File.read(path)
     temporary_details = get_wc_details(content)
-    wc_hash[path] = temporary_details
+    if wc_hash.key?(path)
+      new_path = path + ' '*index
+      wc_hash[new_path] = temporary_details
+    else
+      wc_hash[path] = temporary_details
+    end
   end
   if paths.size > 1
     total_hash = {
@@ -38,9 +43,11 @@ def print_argument(options)
         'bytes' => calculation_total(wc_hash, 'bytes')
       }
     }
+    all_wc_hash = wc_hash.merge(total_hash)
+  else
+    all_wc_hash = wc_hash
   end
 
-  all_wc_hash = wc_hash.merge(total_hash)
   print_adjusted_wc(all_wc_hash, options)
 end
 
@@ -73,7 +80,9 @@ def print_adjusted_wc(all_wc_hash, options)
   resize(wc_hash, widths, *keys)
 
   wc_hash.each_key do |file|
-    puts [wc_hash[file].values, file].join(' ')
+    wc_values = wc_hash[file].values
+    wc_values.delete("")
+    puts [wc_values, file.strip].join(' ')
   end
 end
 
