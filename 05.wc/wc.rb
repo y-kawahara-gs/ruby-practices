@@ -28,10 +28,9 @@ end
 def print_argument
   options = load_options
   paths = ARGV
-  wc_contents = []
-  paths.each do |path|
+  wc_contents = paths.map do |path|
     content = File.read(path)
-    wc_contents <<  get_wc_hash(content, path)
+    get_wc_hash(content, path)
   end
   wc_contents << make_total_hash(wc_contents) if paths.size > 1
   print_adjusted_wc(wc_contents, options)
