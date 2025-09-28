@@ -17,7 +17,7 @@ def print_standard
   while (line = $stdin.gets)
     content += line
   end
-  wc_hash = get_wc_details(content)
+  wc_hash = get_wc_hash(content)
   wc_contents = []
   wc_contents << wc_hash[:lines] if options[:l] || options.empty?
   wc_contents << wc_hash[:words] if options[:w] || options.empty?
@@ -31,8 +31,7 @@ def print_argument
   wc_contents = []
   paths.each do |path|
     content = File.read(path)
-    temporary_details = get_wc_details(content, path)
-    wc_contents << temporary_details
+    wc_contents <<  get_wc_hash(content, path)
   end
   wc_contents << make_total_hash(wc_contents) if paths.size > 1
   print_adjusted_wc(wc_contents, options)
@@ -47,7 +46,7 @@ def make_total_hash(wc_contents)
   }
 end
 
-def get_wc_details(content, path = nil)
+def get_wc_hash(content, path = nil)
   {
     lines: content.count("\n"),
     words: content.split(' ').size,
