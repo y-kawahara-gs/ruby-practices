@@ -12,115 +12,70 @@ def main
 end
 
 def print_standard
+  options = load_options
   content = ''
   while (line = $stdin.gets)
     content += line
   end
-  wc_hash = {}
-  wc_hash[''] = get_wc_details(content)
-  wc_details = remake_by_options(wc_hash, load_options)
-  puts wc_details[''].values.join(' ')
+  wc_hash = get_wc_details(content)
+  wc_contents = []
+  wc_contents << wc_hash[:lines] if options[:l] || options.empty?
+  wc_contents << wc_hash[:words] if options[:w] || options.empty?
+  wc_contents << wc_hash[:bytes] if options[:c] || options.empty?
+  puts wc_contents.join(' ')
 end
 
 def print_argument
   options = load_options
   paths = ARGV
-  wc_hash = {}
-  paths.each_with_index do |path, index|
+  wc_contents = []
+  paths.each do |path|
     content = File.read(path)
-    temporary_details = get_wc_details(content)
-    if wc_hash.key?(path)
-      new_path = path + ' ' * index
-      wc_hash[new_path] = temporary_details
-    else
-      wc_hash[path] = temporary_details
-    end
+    temporary_details = get_wc_details(content, path)
+    wc_contents << temporary_details
   end
-  if paths.size > 1
-    total_hash = make_total_hash(wc_hash)
-    all_wc_hash = wc_hash.merge(total_hash)
-  else
-    all_wc_hash = wc_hash
-  end
-
-  print_adjusted_wc(all_wc_hash, options)
+  wc_contents << make_total_hash(wc_contents) if paths.size > 1
+  print_adjusted_wc(wc_contents, options)
 end
 
-def make_total_hash(wc_hash)
+def make_total_hash(wc_contents)
   {
-    'total' => {
-      'line' => calculation_total(wc_hash, 'line'),
-      'words' => calculation_total(wc_hash, 'words'),
-      'bytes' => calculation_total(wc_hash, 'bytes')
-    }
+    lines: wc_contents.map { |v| v[:lines] }.sum,
+    words: wc_contents.map { |v| v[:words] }.sum,
+    bytes: wc_contents.map { |v| v[:bytes] }.sum,
+    path: 'total'
   }
 end
 
-def calculation_total(wc_hash, key)
-  wc_cal = wc_hash.keys
-  wc_cal.each.sum do |wc_path|
-    wc_hash[wc_path][key]
-  end
-end
-
-def get_wc_details(content)
-  words = content.split(' ')
+def get_wc_details(content, path = nil)
   {
-    'line' => content.count("\n"),
-    'words' => words.size,
-    'bytes' => content.bytesize
+    lines: content.count("\n"),
+    words: content.split(' ').size,
+    bytes: content.bytesize,
+    path: path
   }
 end
 
-def print_adjusted_wc(all_wc_hash, options)
-  wc_hash = remake_by_options(all_wc_hash, options)
-
+def print_adjusted_wc(wc_contents, options)
   widths = {
-    'line' => get_length(wc_hash, 'line'),
-    'words' => get_length(wc_hash, 'words'),
-    'bytes' => get_length(wc_hash, 'bytes')
+    lines: get_length(wc_contents, :lines),
+    words: get_length(wc_contents, :words),
+    bytes: get_length(wc_contents, :bytes)
   }
 
-  keys = %w[line words bytes]
-
-  wc_resize_hash = resize(wc_hash, widths, *keys)
-
-  wc_keys = wc_resize_hash.keys
-  wc_keys.each do |file|
-    wc_values = wc_resize_hash[file].values
-    wc_values.delete('')
-    puts [wc_values, file.strip].join(' ')
+  wc_contents.each do |wc_hash|
+    print wc_hash[:lines].to_s.rjust(widths[:lines]).ljust(widths[:lines] + 1) if options[:l] || options.empty?
+    print wc_hash[:words].to_s.rjust(widths[:words]).ljust(widths[:lines] + 1) if options[:w] || options.empty?
+    print wc_hash[:bytes].to_s.rjust(widths[:bytes]).ljust(widths[:bytes] + 1) if options[:c] || options.empty?
+    puts wc_hash[:path]
   end
 end
 
-def resize(wc_hash, widths, *keys)
-  resize_hash = wc_hash
-  keys.each do |key|
-    resize_hash.each_value do |file|
-      file[key] = file[key].to_s.rjust(widths[key])
-    end
+def get_length(wc_contents, symbol)
+  max_content = wc_contents.max_by do |wc_hash|
+    wc_hash[symbol]
   end
-  resize_hash
-end
-
-def get_length(wc_hash, key)
-  values = wc_hash.keys.map do |n|
-    wc_hash[n][key]
-  end
-
-  max_widths = values.max
-  max_widths.to_s.length
-end
-
-def remake_by_options(all_wc_hash, options)
-  remaked_wc_hash = Hash.new { |hash, key| hash[key] = {} }
-  wc_keys = all_wc_hash.keys
-  wc_keys.each do |wc_hash|
-    remaked_wc_hash[wc_hash]['line'] = all_wc_hash[wc_hash]['line'] if options[:l] || options.empty?
-    remaked_wc_hash[wc_hash]['words'] = all_wc_hash[wc_hash]['words'] if options[:w] || options.empty?
-    remaked_wc_hash[wc_hash]['bytes'] = all_wc_hash[wc_hash]['bytes'] if options[:c] || options.empty?
-  end
-  remaked_wc_hash
+  max_content[symbol].to_s.length
 end
 
 def load_options
