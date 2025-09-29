@@ -18,11 +18,11 @@ def print_standard
     content += line
   end
   wc_hash = build_wc_hash(content)
-  wc_hash_list = []
-  wc_hash_list << wc_hash[:lines] if options[:l] || options.empty?
-  wc_hash_list << wc_hash[:words] if options[:w] || options.empty?
-  wc_hash_list << wc_hash[:bytes] if options[:c] || options.empty?
-  puts wc_hash_list.join(' ')
+  wc_values = []
+  wc_values << wc_hash[:lines] if options[:l] || options.empty?
+  wc_values << wc_hash[:words] if options[:w] || options.empty?
+  wc_values << wc_hash[:bytes] if options[:c] || options.empty?
+  puts wc_values.join(' ')
 end
 
 def print_argument
