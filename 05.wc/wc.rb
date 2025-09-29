@@ -38,9 +38,9 @@ end
 
 def build_total_hash(wc_hash_list)
   {
-    lines: wc_hash_list.map { |v| v[:lines] }.sum,
-    words: wc_hash_list.map { |v| v[:words] }.sum,
-    bytes: wc_hash_list.map { |v| v[:bytes] }.sum,
+    lines: wc_hash_list.sum { |wc_hash| wc_hash[:lines] },
+    words: wc_hash_list.sum { |wc_hash| wc_hash[:words] },
+    bytes: wc_hash_list.sum { |wc_hash| wc_hash[:bytes] },
     path: 'total'
   }
 end
