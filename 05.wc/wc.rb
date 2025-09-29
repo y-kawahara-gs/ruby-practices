@@ -18,29 +18,29 @@ def print_standard
     content += line
   end
   wc_hash = get_wc_hash(content)
-  wc_contents = []
-  wc_contents << wc_hash[:lines] if options[:l] || options.empty?
-  wc_contents << wc_hash[:words] if options[:w] || options.empty?
-  wc_contents << wc_hash[:bytes] if options[:c] || options.empty?
-  puts wc_contents.join(' ')
+  wc_hash_list = []
+  wc_hash_list << wc_hash[:lines] if options[:l] || options.empty?
+  wc_hash_list << wc_hash[:words] if options[:w] || options.empty?
+  wc_hash_list << wc_hash[:bytes] if options[:c] || options.empty?
+  puts wc_hash_list.join(' ')
 end
 
 def print_argument
   options = load_options
   paths = ARGV
-  wc_contents = paths.map do |path|
+  wc_hash_list = paths.map do |path|
     content = File.read(path)
     get_wc_hash(content, path)
   end
-  wc_contents << make_total_hash(wc_contents) if paths.size > 1
-  print_adjusted_wc(wc_contents, options)
+  wc_hash_list << make_total_hash(wc_hash_list) if paths.size > 1
+  print_adjusted_wc(wc_hash_list, options)
 end
 
-def make_total_hash(wc_contents)
+def make_total_hash(wc_hash_list)
   {
-    lines: wc_contents.map { |v| v[:lines] }.sum,
-    words: wc_contents.map { |v| v[:words] }.sum,
-    bytes: wc_contents.map { |v| v[:bytes] }.sum,
+    lines: wc_hash_list.map { |v| v[:lines] }.sum,
+    words: wc_hash_list.map { |v| v[:words] }.sum,
+    bytes: wc_hash_list.map { |v| v[:bytes] }.sum,
     path: 'total'
   }
 end
@@ -54,14 +54,14 @@ def get_wc_hash(content, path = nil)
   }
 end
 
-def print_adjusted_wc(wc_contents, options)
+def print_adjusted_wc(wc_hash_list, options)
   widths = {
-    lines: get_length(wc_contents, :lines),
-    words: get_length(wc_contents, :words),
-    bytes: get_length(wc_contents, :bytes)
+    lines: get_length(wc_hash_list, :lines),
+    words: get_length(wc_hash_list, :words),
+    bytes: get_length(wc_hash_list, :bytes)
   }
 
-  wc_contents.each do |wc_hash|
+  wc_hash_list.each do |wc_hash|
     print wc_hash[:lines].to_s.rjust(widths[:lines]).ljust(widths[:lines] + 1) if options[:l] || options.empty?
     print wc_hash[:words].to_s.rjust(widths[:words]).ljust(widths[:lines] + 1) if options[:w] || options.empty?
     print wc_hash[:bytes].to_s.rjust(widths[:bytes]).ljust(widths[:bytes] + 1) if options[:c] || options.empty?
@@ -69,8 +69,8 @@ def print_adjusted_wc(wc_contents, options)
   end
 end
 
-def get_length(wc_contents, symbol)
-  max_content = wc_contents.max_by do |wc_hash|
+def get_length(wc_hash_list, symbol)
+  max_content = wc_hash_list.max_by do |wc_hash|
     wc_hash[symbol]
   end
   max_content[symbol].to_s.length
