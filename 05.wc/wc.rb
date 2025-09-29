@@ -32,11 +32,11 @@ def print_argument
     content = File.read(path)
     get_wc_hash(content, path)
   end
-  wc_hash_list << make_total_hash(wc_hash_list) if paths.size > 1
+  wc_hash_list << build_total_hash(wc_hash_list) if paths.size > 1
   print_adjusted_wc(wc_hash_list, options)
 end
 
-def make_total_hash(wc_hash_list)
+def build_total_hash(wc_hash_list)
   {
     lines: wc_hash_list.map { |v| v[:lines] }.sum,
     words: wc_hash_list.map { |v| v[:words] }.sum,
