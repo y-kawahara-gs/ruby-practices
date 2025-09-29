@@ -77,11 +77,11 @@ def print_wc_list(wc_list)
   end
 end
 
-def get_length(wc_hash_list, symbol)
+def get_length(wc_hash_list, target)
   max_content = wc_hash_list.max_by do |wc_hash|
-    wc_hash[symbol]
+    wc_hash[target]
   end
-  max_content[symbol].to_s.length
+  max_content[target].to_s.length
 end
 
 def load_options
