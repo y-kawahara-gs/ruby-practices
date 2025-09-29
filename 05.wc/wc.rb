@@ -17,7 +17,7 @@ def print_standard
   while (line = $stdin.gets)
     content += line
   end
-  wc_hash = get_wc_hash(content)
+  wc_hash = build_wc_hash(content)
   wc_hash_list = []
   wc_hash_list << wc_hash[:lines] if options[:l] || options.empty?
   wc_hash_list << wc_hash[:words] if options[:w] || options.empty?
@@ -30,7 +30,7 @@ def print_argument
   paths = ARGV
   wc_hash_list = paths.map do |path|
     content = File.read(path)
-    get_wc_hash(content, path)
+    build_wc_hash(content, path)
   end
   wc_hash_list << build_total_hash(wc_hash_list) if paths.size > 1
   print_adjusted_wc(wc_hash_list, options)
@@ -45,7 +45,7 @@ def build_total_hash(wc_hash_list)
   }
 end
 
-def get_wc_hash(content, path = nil)
+def build_wc_hash(content, path = nil)
   {
     lines: content.count("\n"),
     words: content.split(' ').size,
