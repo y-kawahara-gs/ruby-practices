@@ -60,20 +60,13 @@ def print_adjusted_wc(wc_hash_list, options)
     words: get_length(wc_hash_list, :words),
     bytes: get_length(wc_hash_list, :bytes)
   }
-  wc_list = wc_hash_list.map do |wc_hash|
+  wc_hash_list.each do |wc_hash|
     wc_values = []
     wc_values << wc_hash[:lines].to_s.rjust(widths[:lines]) if options[:l] || options.empty?
     wc_values << wc_hash[:words].to_s.rjust(widths[:words]) if options[:w] || options.empty?
     wc_values << wc_hash[:bytes].to_s.rjust(widths[:bytes]) if options[:c] || options.empty?
     wc_values << wc_hash[:path]
-    wc_values
-  end
-  print_wc_list(wc_list)
-end
-
-def print_wc_list(wc_list)
-  wc_list.each do |wc_rows|
-    puts wc_rows.join(' ')
+    puts wc_values.join(' ')
   end
 end
 
