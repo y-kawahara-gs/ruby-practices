@@ -71,8 +71,7 @@ def print_adjusted_wc(wc_hash_list, options)
 end
 
 def get_length(wc_hash_list, target)
-  wc_hash_list.map { |wc_hash|
-    wc_hash[target].to_s.length }.max
+  wc_hash_list.map { |wc_hash| wc_hash[target].to_s.length }.max
 end
 
 def load_options
