@@ -14,9 +14,9 @@ class Frame
   def score
     first_shot.score + second_shot.score + third_shot.score
   end
-  
+
   def strike
-    first_shot.score == 10 ? true : false
+    first_shot.score == 10
   end
 
   def spare
