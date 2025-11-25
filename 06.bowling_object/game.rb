@@ -7,7 +7,15 @@ class Game
 
   def initialize(received_scores)
     flat_scores = received_scores.flat_map { |shot| shot == 'X' ? ['X', 0] : shot }
-    frame_informations = flat_scores.each_slice(2).to_a
+    all_frames = flat_scores.each_slice(2).to_a
+
+    frames_before_nine = all_frames[0..8]
+    frames_ten = all_frames[9..]
+    frame_ten_throws = frames_ten.flat_map do |element|
+      element.reject { |shot| shot.instance_of?(Integer) && shot.zero? }
+    end
+
+    frame_informations = frames_before_nine + [frame_ten_throws]
     @frames = frame_informations.map do |frame_mark|
       Frame.new(frame_mark[0], frame_mark[1], frame_mark[2])
     end
