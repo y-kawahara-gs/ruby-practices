@@ -7,8 +7,8 @@ class Game
 
   def initialize(received_scores)
     flat_scores = received_scores.flat_map { |shot| shot == 'X' ? ['X', 0] : shot }
-    frames_argument_list = flat_scores.each_slice(2).to_a
-    @frames = frames_argument_list.map do |frame_mark|
+    frame_informations = flat_scores.each_slice(2).to_a
+    @frames = frame_informations.map do |frame_mark|
       Frame.new(frame_mark[0], frame_mark[1], frame_mark[2])
     end
   end
