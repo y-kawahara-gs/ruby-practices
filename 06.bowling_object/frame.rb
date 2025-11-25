@@ -12,7 +12,7 @@ class Frame
   end
 
   def score
-    first_shot.score + second_shot.score + third_shot.score
+    [first_shot, second_shot,third_shot].map(&:score).sum
   end
 
   def strike
