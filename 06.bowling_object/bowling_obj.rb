@@ -8,4 +8,4 @@ require_relative 'game'
 score = ARGV[0]
 scores = score.split(',')
 game = Game.new(scores)
-p game.score
+puts game.score
