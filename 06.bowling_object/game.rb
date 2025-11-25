@@ -16,16 +16,9 @@ class Game
   def score
     frames.each_with_index.sum do |frame, index|
       base_score = frame.score
+
       bonus_score = if index < 9
-                      if frame.spare
-                        frames[index + 1].first_shot.score
-                      elsif frame.strike
-                        next_score = frames[index + 1].first_shot.score + frames[index + 1].second_shot.score
-                        next_score += frames[index + 2].first_shot.score if frames[index + 1].first_shot.score == 10
-                        next_score
-                      else
-                        0
-                      end
+                      frame.score_of_spare_or_strike(frames[index + 1], frames[index + 2])
                     else
                       0
                     end

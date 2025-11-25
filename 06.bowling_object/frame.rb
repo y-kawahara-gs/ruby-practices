@@ -15,11 +15,23 @@ class Frame
     [first_shot, second_shot,third_shot].map(&:score).sum
   end
 
-  def strike
+  def score_of_spare_or_strike(next_frame, after_next_frame)
+    if spare?
+      bonus = next_frame.first_shot.score
+    elsif strike?
+      bonus = next_frame.score
+      bonus += after_next_frame.first_shot.score if next_frame.first_shot.score == 10
+      bonus
+    else
+      0
+    end
+  end
+
+  def strike?
     first_shot.score == 10
   end
 
-  def spare
+  def spare?
     first_shot.score != 10 && (first_shot.score + second_shot.score) == 10
   end
 end
