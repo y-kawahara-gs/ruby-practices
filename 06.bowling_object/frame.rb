@@ -20,7 +20,7 @@ class Frame
       next_frame.first_shot.score
     elsif strike?
       bonus = next_frame.first_shot.score + next_frame.second_shot.score
-      bonus += after_next_frame.first_shot.score if next_frame.first_shot.score == 10 && !after_next_frame.nil?
+      bonus += after_next_frame.first_shot.score if next_frame.strike? && !after_next_frame.nil?
       bonus
     else
       0
