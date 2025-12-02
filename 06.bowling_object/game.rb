@@ -15,8 +15,8 @@ class Game
       element.reject { |shot| shot.instance_of?(Integer) && shot.zero? }
     end
 
-    frame_informations = frames_before_nine + [frame_ten_throws]
-    @frames = frame_informations.map do |frame_mark|
+    frames = frames_before_nine + [frame_ten_throws]
+    @frames = frames.map do |frame_mark|
       Frame.new(*frame_mark)
     end
   end
