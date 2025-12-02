@@ -17,7 +17,7 @@ class Game
 
     frame_informations = frames_before_nine + [frame_ten_throws]
     @frames = frame_informations.map do |frame_mark|
-      Frame.new(frame_mark[0], frame_mark[1], frame_mark[2])
+      Frame.new(*frame_mark)
     end
   end
 
