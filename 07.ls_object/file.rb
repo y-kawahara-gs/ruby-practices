@@ -4,14 +4,13 @@ require 'etc'
 
 module MyLs
   class File
-    attr_reader :name, :info
-
     def initialize(filename)
       @name = filename
       @info = ::File.stat(filename)
     end
 
     def return_detail
+      info = @info
       [
         return_mode,
         info.nlink,
@@ -19,7 +18,7 @@ module MyLs
         Etc.getpwuid(info.gid).name,
         info.size.to_s.rjust(4),
         info.mtime.strftime('%b %e %R'),
-        name
+        @name
       ].join(' ')
     end
 
@@ -28,7 +27,7 @@ module MyLs
     end
 
     def return_type
-      mode = info.mode.to_s(8).rjust(6, '0')
+      mode = @info.mode.to_s(8).rjust(6, '0')
       {
         '14' => 's',
         '12' => 'l',
@@ -40,7 +39,7 @@ module MyLs
     end
 
     def return_permission
-      mode = info.mode.to_s(8).rjust(6, '0')
+      mode = @info.mode.to_s(8).rjust(6, '0')
       (3..5).map do |number|
         {
           '0' => '---',

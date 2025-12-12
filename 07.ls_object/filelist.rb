@@ -3,8 +3,6 @@
 require_relative './file'
 
 class Filelist
-  attr_reader :files
-
   def initialize(all = nil, reverse = nil)
     option_a = all ? File::FNM_DOTMATCH : 0
     files = Dir.glob('*', option_a)
@@ -12,6 +10,7 @@ class Filelist
   end
 
   def alingne_files
+    files = @files
     rows = files.length.ceildiv(3)
     file_rows = Array.new(rows) { Array.new(3) }
     files.each_with_index do |file, index|
@@ -30,12 +29,12 @@ class Filelist
   end
 
   def return_total_block
-    total_size = files.each.sum { |one_size| File.stat(one_size).blocks }
+    total_size = @files.each.sum { |one_size| File.stat(one_size).blocks }
     "total #{total_size / 2}"
   end
 
   def return_file_details
-    files.map do |filename|
+    @files.map do |filename|
       file = MyLs::File.new(filename)
       file.return_detail
     end

@@ -3,8 +3,6 @@
 require 'optparse'
 
 class Option
-  attr_reader :status
-
   def initialize(command_line)
     opt = OptionParser.new
     params = {}
@@ -17,6 +15,6 @@ class Option
   end
 
   def judge(option_key)
-    status[option_key]
+    @status[option_key]
   end
 end
