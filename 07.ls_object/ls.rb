@@ -2,8 +2,12 @@
 # frozen_string_literal: true
 
 require_relative './option'
-require_relative './system_controller'
+require_relative './list'
 
-result = SystemController.new
-
-result.run
+option = Option.new
+list = List.new(option.judge(:a), option.judge(:r))
+if option.judge(:l)
+  list.print_file_details
+else
+  list.print_files
+end
