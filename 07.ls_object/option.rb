@@ -3,6 +3,8 @@
 require 'optparse'
 
 class Option
+  attr_reader :status
+
   def initialize(command_line)
     opt = OptionParser.new
     params = {}
@@ -12,9 +14,5 @@ class Option
     opt.parse!(command_line)
 
     @status = params
-  end
-
-  def exist?(option_key)
-    @status[option_key]
   end
 end
