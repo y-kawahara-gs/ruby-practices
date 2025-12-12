@@ -5,8 +5,8 @@ require_relative './option'
 require_relative './list'
 
 option = Option.new(ARGV)
-list = List.new(option.judge(:a), option.judge(:r))
-if option.judge(:l)
+list = List.new(option.exist?(:a), option.exist?(:r))
+if option.exist?(:l)
   list.print_file_details
 else
   list.print_files

@@ -14,7 +14,7 @@ class Option
     @status = params
   end
 
-  def judge(option_key)
+  def exist?(option_key)
     @status[option_key]
   end
 end
