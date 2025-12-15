@@ -4,8 +4,8 @@ require_relative './file'
 
 class Filelist
   def initialize(option)
-    option_a = option[:a] ? File::FNM_DOTMATCH : 0
-    file_names = Dir.glob('*', option_a)
+    dot_file_option = option[:a] ? File::FNM_DOTMATCH : 0
+    file_names = Dir.glob('*', dot_file_option)
     @file_names = option[:r] ? file_names.reverse : file_names
     @list = option[:l]
   end
