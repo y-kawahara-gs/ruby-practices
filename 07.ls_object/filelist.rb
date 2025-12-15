@@ -30,7 +30,7 @@ class Filelist
   end
 
   def return_total_block
-    total_size = @file_names.each.sum { |one_size| File.stat(one_size).blocks }
+    total_size = @file_names.sum { |file_name| File.stat(file_name).blocks }
     "total #{total_size / 2}"
   end
 
