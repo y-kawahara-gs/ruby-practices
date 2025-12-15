@@ -29,15 +29,15 @@ class Filelist
     aligned_file_columns.transpose
   end
 
-  def return_total_block
+  def total_block
     total_size = @file_names.sum { |file_name| File.stat(file_name).blocks }
     "total #{total_size / 2}"
   end
 
-  def return_file_details
+  def file_details
     @file_names.map do |filename|
       file = MyLs::File.new(filename)
-      file.return_detail
+      file.detail
     end
   end
 
@@ -52,8 +52,8 @@ class Filelist
   end
 
   def print_file_details
-    puts return_total_block
-    puts return_file_details
+    puts total_block
+    puts file_details
   end
 
   def print_list

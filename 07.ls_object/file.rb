@@ -9,10 +9,10 @@ module MyLs
       @file_stat = ::File.stat(filename)
     end
 
-    def return_detail
+    def detail
       file_stat = @file_stat
       [
-        return_mode,
+        mode,
         file_stat.nlink,
         Etc.getpwuid(file_stat.uid).name,
         Etc.getpwuid(file_stat.gid).name,
@@ -22,11 +22,11 @@ module MyLs
       ].join(' ')
     end
 
-    def return_mode
-      [return_type, return_permission].join
+    def mode
+      [type, permission].join
     end
 
-    def return_type
+    def type
       mode = @file_stat.mode.to_s(8).rjust(6, '0')
       {
         '14' => 's',
@@ -38,7 +38,7 @@ module MyLs
       }[mode[0, 2]]
     end
 
-    def return_permission
+    def permission
       mode = @file_stat.mode.to_s(8).rjust(6, '0')
       (3..5).map do |number|
         {
