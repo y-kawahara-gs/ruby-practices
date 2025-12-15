@@ -55,8 +55,8 @@ class Filelist
       '7' => 'rwx'
     }
     @file_names.map do |filename|
-      file = MyLs::File.new(filename)
-      file.detail(type_map, permission_map)
+      file = FileDetail.new(filename)
+      file.to_s(type_map, permission_map)
     end
   end
 
