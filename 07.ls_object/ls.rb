@@ -5,6 +5,6 @@ require_relative './option'
 require_relative './filelist'
 
 option = Option.new(ARGV)
-filelist = Filelist.new(option.status)
+filelist = FileList.new(option.status)
 
 filelist.print_list

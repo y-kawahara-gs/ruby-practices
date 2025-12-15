@@ -2,7 +2,7 @@
 
 require 'etc'
 
-class Filedetail
+class FileDetail
   def initialize(filename)
     @file_name = filename
     @file_stat = File.stat(filename)
