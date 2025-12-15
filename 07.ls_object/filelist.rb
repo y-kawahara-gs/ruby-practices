@@ -35,9 +35,28 @@ class Filelist
   end
 
   def file_details
+    type_map = {
+      '14' => 's',
+      '12' => 'l',
+      '10' => '-',
+      '06' => 'b',
+      '04' => 'd',
+      '02' => 'c'
+    }
+
+    permission_map = {
+      '0' => '---',
+      '1' => '--x',
+      '2' => '-w-',
+      '3' => '-wx',
+      '4' => 'r--',
+      '5' => 'r-x',
+      '6' => 'rw-',
+      '7' => 'rwx'
+    }
     @file_names.map do |filename|
       file = MyLs::File.new(filename)
-      file.detail
+      file.detail(type_map, permission_map)
     end
   end
 

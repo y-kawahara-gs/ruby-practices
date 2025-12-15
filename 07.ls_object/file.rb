@@ -9,10 +9,10 @@ module MyLs
       @file_stat = ::File.stat(filename)
     end
 
-    def detail
+    def detail(type_map, permission_map)
       file_stat = @file_stat
       [
-        mode,
+        mode(type_map, permission_map),
         file_stat.nlink,
         Etc.getpwuid(file_stat.uid).name,
         Etc.getpwuid(file_stat.gid).name,
@@ -22,35 +22,19 @@ module MyLs
       ].join(' ')
     end
 
-    def mode
-      [type, permission].join
+    def mode(type_map, permission_map)
+      [type(type_map), permission(permission_map)].join
     end
 
-    def type
+    def type(type_map)
       mode = @file_stat.mode.to_s(8).rjust(6, '0')
-      {
-        '14' => 's',
-        '12' => 'l',
-        '10' => '-',
-        '06' => 'b',
-        '04' => 'd',
-        '02' => 'c'
-      }[mode[0, 2]]
+      type_map[mode[0, 2]]
     end
 
-    def permission
+    def permission(permission_map)
       mode = @file_stat.mode.to_s(8).rjust(6, '0')
       (3..5).map do |number|
-        {
-          '0' => '---',
-          '1' => '--x',
-          '2' => '-w-',
-          '3' => '-wx',
-          '4' => 'r--',
-          '5' => 'r-x',
-          '6' => 'rw-',
-          '7' => 'rwx'
-        }[mode[number]]
+        permission_map[mode[number]]
       end
     end
   end
