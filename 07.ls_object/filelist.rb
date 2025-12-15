@@ -20,9 +20,9 @@ class Filelist
       file_rows[row][col] = file_name
     end
 
-    aligned_file_colums = file_rows.transpose.map do |colum|
-      max_length = colum.max_by { |file| file.to_s.length }&.length
-      colum.map do |file|
+    aligned_file_colums = file_rows.transpose.map do |colums|
+      max_length = colums.max_by { |file| file.to_s.length }&.length
+      colums.map do |file|
         file&.ljust(max_length)
       end
     end
