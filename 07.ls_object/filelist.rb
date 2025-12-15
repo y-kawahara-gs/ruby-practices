@@ -10,7 +10,7 @@ class Filelist
     @list = option[:l]
   end
 
-  def alingne_files
+  def aligned_files
     file_names = @file_names
     rows = file_names.length.ceildiv(3)
     file_rows = Array.new(rows) { Array.new(3) }
@@ -42,7 +42,7 @@ class Filelist
   end
 
   def print_files
-    files_box = alingne_files
+    files_box = aligned_files
     files_box.each do |rows|
       rows.each do |file|
         print "#{file} "
