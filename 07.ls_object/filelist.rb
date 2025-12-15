@@ -42,8 +42,8 @@ class Filelist
   end
 
   def print_files
-    files_box = aligned_files
-    files_box.each do |rows|
+    files = aligned_files
+    files.each do |rows|
       rows.each do |file|
         print "#{file} "
       end

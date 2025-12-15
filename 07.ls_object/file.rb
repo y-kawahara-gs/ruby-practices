@@ -5,20 +5,20 @@ require 'etc'
 module MyLs
   class File
     def initialize(filename)
-      @name = filename
-      @info = ::File.stat(filename)
+      @file_name = filename
+      @file_stat = ::File.stat(filename)
     end
 
     def return_detail
-      info = @info
+      file_stat = @file_stat
       [
         return_mode,
-        info.nlink,
-        Etc.getpwuid(info.uid).name,
-        Etc.getpwuid(info.gid).name,
-        info.size.to_s.rjust(4),
-        info.mtime.strftime('%b %e %R'),
-        @name
+        file_stat.nlink,
+        Etc.getpwuid(file_stat.uid).name,
+        Etc.getpwuid(file_stat.gid).name,
+        file_stat.size.to_s.rjust(4),
+        file_stat.mtime.strftime('%b %e %R'),
+        @file_name
       ].join(' ')
     end
 
@@ -27,7 +27,7 @@ module MyLs
     end
 
     def return_type
-      mode = @info.mode.to_s(8).rjust(6, '0')
+      mode = @file_stat.mode.to_s(8).rjust(6, '0')
       {
         '14' => 's',
         '12' => 'l',
@@ -39,7 +39,7 @@ module MyLs
     end
 
     def return_permission
-      mode = @info.mode.to_s(8).rjust(6, '0')
+      mode = @file_stat.mode.to_s(8).rjust(6, '0')
       (3..5).map do |number|
         {
           '0' => '---',
