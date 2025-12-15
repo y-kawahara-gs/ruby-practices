@@ -20,13 +20,13 @@ class Filelist
       file_rows[row][col] = file_name
     end
 
-    aligned_file_colums = file_rows.transpose.map do |colums|
-      max_length = colums.max_by { |file| file.to_s.length }&.length
-      colums.map do |file|
+    aligned_file_columns = file_rows.transpose.map do |columns|
+      max_length = columns.max_by { |file| file.to_s.length }&.length
+      columns.map do |file|
         file&.ljust(max_length)
       end
     end
-    aligned_file_colums.transpose
+    aligned_file_columns.transpose
   end
 
   def return_total_block
