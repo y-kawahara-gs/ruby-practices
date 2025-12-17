@@ -3,26 +3,6 @@
 require_relative './filedetail'
 
 class FileList
-  TYPE_MAP = {
-    '14' => 's',
-    '12' => 'l',
-    '10' => '-',
-    '06' => 'b',
-    '04' => 'd',
-    '02' => 'c'
-  }.freeze
-
-  PERMISSION_MAP = {
-    '0' => '---',
-    '1' => '--x',
-    '2' => '-w-',
-    '3' => '-wx',
-    '4' => 'r--',
-    '5' => 'r-x',
-    '6' => 'rw-',
-    '7' => 'rwx'
-  }.freeze
-
   def initialize(option)
     dot_file_option = option[:a] ? File::FNM_DOTMATCH : 0
     file_names = Dir.glob('*', dot_file_option)
@@ -57,7 +37,7 @@ class FileList
   def file_details
     @file_names.map do |filename|
       file = FileDetail.new(filename)
-      file.to_s(TYPE_MAP, PERMISSION_MAP)
+      file.to_s
     end
   end
 
