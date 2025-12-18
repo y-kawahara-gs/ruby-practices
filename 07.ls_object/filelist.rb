@@ -27,8 +27,8 @@ class FileList
   end
 
   def file_details
-    @file_names.map do |filename|
-      file = FileDetail.new(filename)
+    @file_names.map do |file_name|
+      file = FileDetail.new(file_name)
       file.to_s
     end
   end

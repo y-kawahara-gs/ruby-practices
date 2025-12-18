@@ -23,9 +23,9 @@ class FileDetail
     '7' => 'rwx'
   }.freeze
 
-  def initialize(filename)
-    @file_name = filename
-    @file_stat = File.stat(filename)
+  def initialize(file_name)
+    @file_name = file_name
+    @file_stat = File.stat(file_name)
   end
 
   def to_s
