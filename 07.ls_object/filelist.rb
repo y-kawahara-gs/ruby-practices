@@ -10,23 +10,15 @@ class FileList
     @list = option[:l]
   end
 
-  def aligned_files
-    file_names = @file_names
-    rows = file_names.length.ceildiv(3)
-    file_rows = Array.new(rows) { Array.new(3) }
-    file_names.each_with_index do |file_name, index|
-      row = index % rows
-      col = index / rows
-      file_rows[row][col] = file_name
-    end
+  def print_list
+    @list ? print_file_details : print_files
+  end
 
-    aligned_file_columns = file_rows.transpose.map do |columns|
-      max_length = columns.max_by { |file| file.to_s.length }&.length
-      columns.map do |file|
-        file&.ljust(max_length)
-      end
-    end
-    aligned_file_columns.transpose
+  private
+
+  def print_file_details
+    puts total_block
+    puts file_details
   end
 
   def total_block
@@ -51,12 +43,22 @@ class FileList
     end
   end
 
-  def print_file_details
-    puts total_block
-    puts file_details
-  end
+  def aligned_files
+    file_names = @file_names
+    rows = file_names.length.ceildiv(3)
+    file_rows = Array.new(rows) { Array.new(3) }
+    file_names.each_with_index do |file_name, index|
+      row = index % rows
+      col = index / rows
+      file_rows[row][col] = file_name
+    end
 
-  def print_list
-    @list ? print_file_details : print_files
+    aligned_file_columns = file_rows.transpose.map do |columns|
+      max_length = columns.max_by { |file| file.to_s.length }&.length
+      columns.map do |file|
+        file&.ljust(max_length)
+      end
+    end
+    aligned_file_columns.transpose
   end
 end

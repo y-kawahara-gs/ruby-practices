@@ -41,6 +41,8 @@ class FileDetail
     ].join(' ')
   end
 
+  private
+
   def mode
     [type, permission].join
   end
