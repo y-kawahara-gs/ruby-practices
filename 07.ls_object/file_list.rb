@@ -44,10 +44,9 @@ class FileList
   end
 
   def aligned_files
-    file_names = @file_names
-    rows = file_names.length.ceildiv(3)
+    rows = @file_names.length.ceildiv(3)
     file_rows = Array.new(rows) { Array.new(3) }
-    file_names.each_with_index do |file_name, index|
+    @file_names.each_with_index do |file_name, index|
       row = index % rows
       col = index / rows
       file_rows[row][col] = file_name
