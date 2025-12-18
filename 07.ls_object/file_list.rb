@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './filedetail'
+require_relative './file_detail'
 
 class FileList
   def initialize(option)
